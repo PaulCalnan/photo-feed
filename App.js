@@ -1,12 +1,23 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { createBottomTabNavigator } from 'react-navigation';
+
+import feed from './app/screens/feed.js';
+import profile from './app/screens/profile.js';
+import upload from './app/screens/upload.js';
+
+const MainStack = createBottomTabNavigator(
+  {
+    Feed: { screen: feed },
+    Upload: { screen: upload },
+    Profile: {screen: profile }
+  }
+)
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+      <MainStack />
     );
   }
 }
