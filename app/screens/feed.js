@@ -20,6 +20,45 @@ class feed extends React.Component{
 
   }
 
+  pluralCheck = (s) => {
+
+    if(s == 1){
+      return ' ago';
+    }else{
+      return 's ago';
+    }
+  }
+
+  timeConverter = (timestamp) => {
+
+    var a = new Date(timestamp * 1000);
+    var seconds = Math.floor((new Date() - a) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+    if (interval > 1){
+      return interval+ ' year'+this.pluralCheck(interval);
+    }
+    interval = Math.floor(seconds / 259000);
+    if (interval > 1){
+      return interval+ ' month'+this.pluralCheck(interval);
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1){
+      return interval+ ' day'+this.pluralCheck(interval);
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1){
+      return interval+ ' hour'+this.pluralCheck(interval);
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1){
+      return interval+ ' minute'+this.pluralCheck(interval);
+    }
+    return Math.floor(seconds)+ ' second'+this.pluralCheck(interval);
+
+
+  }
+
   loadFeed = () => {
 
     this.setState({
@@ -36,15 +75,15 @@ class feed extends React.Component{
 
         for(var photo in data){
           var photoObj = data[photo];
-            database.ref('users').child(photoObj.author).once('value').then(function(snapshot) {
+            database.ref('users').child(photoObj.author).child('username').once('value').then(function(snapshot) {
               const exists = (snapshot.val() !== null);
               if(exists) data = snapshot.val();
                 photo_feed.push({
                   id: photo,
                   url: photoObj.url,
                   caption: photoObj.caption,
-                  posted: photoObj.posted,
-                  author: data.username
+                  posted: that.timeConverter(photoObj.posted),
+                  author: data
                 });
 
                 that.setState({
