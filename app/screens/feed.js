@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View, Image } from 'react-native';
+import { TouchableOpacity, FlatList, StyleSheet, Text, View, Image } from 'react-native';
 import { f, auth, database, storage } from '../../config/config.js';
 
 class feed extends React.Component{
@@ -83,7 +83,8 @@ class feed extends React.Component{
                   url: photoObj.url,
                   caption: photoObj.caption,
                   posted: that.timeConverter(photoObj.posted),
-                  author: data
+                  author: data,
+                  authorId: photoObj.author
                 });
 
                 that.setState({
@@ -143,7 +144,10 @@ class feed extends React.Component{
                                           borderColor: 'grey'}}>
                   <View style={{padding:5, width:'100%', flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Text>{item.posted}</Text>
-                    <Text>{item.author}</Text>
+                    <TouchableOpacity
+                    onPress={ () => this.props.navigation.navigate('User', {userId: item.authorId})}>
+                      <Text>{item.author}</Text>
+                    </TouchableOpacity>
                   </View>
                   <View>
                     <Image
